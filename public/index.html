@@ -12,26 +12,99 @@
     />
   </head>
   <body>
-    <div class="app">
-      <div class="container">
-        <header class="header mb-2">
-          <img src="./logo.png" alt="" />
-        </header>
-        <div class="card mb-2" style="width: 18rem">
-          <div class="card-body">
-            <p class="card-text">12:11:20 PM</p>
-          </div>
-        </div>
-        <div class="card" style="width: 18rem">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="root"></div>
+
+    <script>
+      const state = {
+        time: new Date(),
+        lots: [
+          { id: 1, name: 'Card 1', description: 'Description 1' },
+          { id: 2, name: 'Card 2', description: 'Description 2' },
+        ],
+      };
+
+      // #################
+
+      function App({ state }) {
+        const app = document.createElement('div');
+        app.className = 'app';
+        app.append(Header());
+        app.append(Clock({ time: state.time }));
+        app.append(Lots({ lots: state.lots }));
+        return app;
+      }
+
+      function Header() {
+        const header = document.createElement('header');
+        header.className = 'header mb-2';
+        header.append(Logo());
+        return header;
+      }
+
+      function Logo() {
+        const logo = document.createElement('img');
+        logo.src = './logo.png';
+        return logo;
+      }
+
+      function Clock({ time }) {
+        const clock = document.createElement('div');
+        clock.className = 'card mb-2';
+        clock.style = 'width: 18rem';
+
+        const clockWrap = document.createElement('div');
+        clockWrap.className = 'card-body';
+
+        const clockTime = document.createElement('p');
+        clockTime.className = 'card-text';
+        clockTime.innerText = time.toLocaleTimeString();
+
+        clock.append(clockWrap);
+        clockWrap.append(clockTime);
+
+        return clock;
+      }
+
+      function Lots({ lots }) {
+        const list = document.createElement('div');
+        list.className = 'lots';
+
+        lots.forEach((lot) => {
+          list.append(Lot({ lot }));
+        });
+
+        return list;
+      }
+
+      function Lot({ lot }) {
+        const node = document.createElement('div');
+        node.className = 'card mb-2';
+        node.style = 'width: 18rem';
+
+        const nodeWrap = document.createElement('div');
+        nodeWrap.className = 'card-body';
+        node.append(nodeWrap);
+
+        const title = document.createElement('h5');
+        title.className = 'card-title';
+        title.innerText = lot.name;
+        nodeWrap.append(title);
+
+        const description = document.createElement('p');
+        description.className = 'card-text';
+        description.innerText = lot.description;
+        nodeWrap.append(description);
+
+        return node;
+      }
+
+      // #################
+
+      render(App({ state }), document.getElementById('root'));
+
+      function render(newDom, realDomRoot) {
+        realDomRoot.append(newDom);
+      }
+    </script>
   </body>
 </html>
